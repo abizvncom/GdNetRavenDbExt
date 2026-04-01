@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GdNet.Common" Version="3.0.251022" />
+    <PackageReference Include="RavenDB.Client" Version="7.0.5" />
+  </ItemGroup>
+
+</Project>
