@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GdNet.Common" Version="3.0.251022" />
+    <PackageReference Include="GdNet.Common" Version="3.0.2507192" />
+    <PackageReference Include="GdNetDDD" Version="1.3.260401" />
     <PackageReference Include="RavenDB.Client" Version="7.0.5" />
   </ItemGroup>
 
