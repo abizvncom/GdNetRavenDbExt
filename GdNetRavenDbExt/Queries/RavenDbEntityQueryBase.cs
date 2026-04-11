@@ -1,6 +1,5 @@
 ﻿using GdNet.Common;
 using GdNetDDD.Entities;
-using GdNetRavenDbExt;
 using Raven.Client.Documents.Linq;
 using Raven.Client.Documents.Session;
 
