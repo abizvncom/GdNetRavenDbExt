@@ -7,11 +7,13 @@ namespace GdNetRavenDbExt.Queries;
 
 using GdNetDDD.Queries;
 
-public abstract class RavenDbEntityQueryBase<TEntity>(IAsyncDocumentSession documentSession, string indexName) : IGenericEntityQuery<TEntity> where TEntity : IEntity
+public abstract class RavenDbEntityQueryAndSearchBase<TEntity>(IAsyncDocumentSession documentSession, string indexName)
+    : IGenericEntityQuery<TEntity>, IGenericEntitySearch<TEntity> where TEntity : IEntity
 {
     protected IAsyncDocumentSession DocumentSession => documentSession;
 
-    public Task<PaginatedResult<TEntity>> FilterAsync(string value, IEnumerable<string> filterableFields, int? page, int? pageSize)
+    public Task<PaginatedResult<TEntity>> FilterAsync(string value, IEnumerable<string> filterableFields, int? page, int? pageSize,
+        params SortOption<TEntity>[] sortOptions)
     {
         var query = GetSearchableQuery();
 
@@ -20,10 +22,12 @@ public abstract class RavenDbEntityQueryBase<TEntity>(IAsyncDocumentSession docu
             query = ApplyFilter(query, fieldName, value, QueryOperator.Guess);
         }
 
-        return query.GetPaginatedList(page.GetPageNumberOrDefault(), pageSize.GetPageSizeOrDefault());
+        return query.ApplySortOptions(sortOptions)
+                    .GetPaginatedList(page.GetPageNumberOrDefault(), pageSize.GetPageSizeOrDefault());
     }
 
-    public Task<PaginatedResult<TEntity>> FilterAsync(IEnumerable<QueryOption> filterOptions, int? page, int? pageSize)
+    public Task<PaginatedResult<TEntity>> FilterAsync(IEnumerable<QueryOption> filterOptions, int? page, int? pageSize,
+        params SortOption<TEntity>[] sortOptions)
     {
         var query = GetSearchableQuery();
 
@@ -32,10 +36,12 @@ public abstract class RavenDbEntityQueryBase<TEntity>(IAsyncDocumentSession docu
             query = ApplyFilter(query, option.Field, option.Value, option.Operator);
         }
 
-        return query.GetPaginatedList(page.GetPageNumberOrDefault(), pageSize.GetPageSizeOrDefault());
+        return query.ApplySortOptions(sortOptions)
+                    .GetPaginatedList(page.GetPageNumberOrDefault(), pageSize.GetPageSizeOrDefault());
     }
 
-    public Task<PaginatedResult<TEntity>> SearchAsync(string ftsTerms, IEnumerable<string> searchableFields, int? page, int? pageSize)
+    public Task<PaginatedResult<TEntity>> SearchAsync(string ftsTerms, IEnumerable<string> searchableFields, int? page, int? pageSize,
+        params SortOption<TEntity>[] sortOptions)
     {
         var query = GetSearchableQuery();
 
@@ -44,10 +50,12 @@ public abstract class RavenDbEntityQueryBase<TEntity>(IAsyncDocumentSession docu
             query = ApplySearch(query, fieldName, ftsTerms, boost: 1);
         }
 
-        return query.GetPaginatedList(page.GetPageNumberOrDefault(), pageSize.GetPageSizeOrDefault());
+        return query.ApplySortOptions(sortOptions)
+                    .GetPaginatedList(page.GetPageNumberOrDefault(), pageSize.GetPageSizeOrDefault());
     }
 
-    public Task<PaginatedResult<TEntity>> SearchAsync(IEnumerable<SearchOption> searchOptions, int? page, int? pageSize)
+    public Task<PaginatedResult<TEntity>> SearchAsync(IEnumerable<SearchOption> searchOptions, int? page, int? pageSize,
+        params SortOption<TEntity>[] sortOptions)
     {
         var query = GetSearchableQuery();
 
@@ -56,7 +64,8 @@ public abstract class RavenDbEntityQueryBase<TEntity>(IAsyncDocumentSession docu
             query = ApplySearch(query, option.Field, option.FtsTerms, boost: 1);
         }
 
-        return query.GetPaginatedList(page.GetPageNumberOrDefault(), pageSize.GetPageSizeOrDefault());
+        return query.ApplySortOptions(sortOptions)
+                    .GetPaginatedList(page.GetPageNumberOrDefault(), pageSize.GetPageSizeOrDefault());
     }
 
     protected virtual IRavenQueryable<TEntity> GetSearchableQuery()

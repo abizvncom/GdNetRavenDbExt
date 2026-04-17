@@ -7,8 +7,31 @@ namespace GdNetRavenDbExt.Queries;
 
 using GdNetDDD.Queries;
 
-public static class QueryByStatusExtensions
+public static class Extensions
 {
+    public static IRavenQueryable<TEntity> ApplySortOptions<TEntity>(this IRavenQueryable<TEntity> query, params SortOption<TEntity>[] sortOptions)
+    {
+        IRavenQueryable<TEntity> orderedQuery = null!;
+
+        foreach (var option in sortOptions)
+        {
+            if (orderedQuery == null)
+            {
+                orderedQuery = (option.Direction == SortDirection.Asc)
+                    ? query.OrderBy(option.Property)
+                    : query.OrderByDescending(option.Property);
+            }
+            else
+            {
+                orderedQuery = (option.Direction == SortDirection.Asc)
+                    ? orderedQuery.ThenBy(option.Property)
+                    : orderedQuery.ThenByDescending(option.Property);
+            }
+        }
+
+        return orderedQuery ?? query;
+    }
+
     public static IRavenQueryable<TEntity> FilterByStatus<TEntity, TStatus>(this IRavenQueryable<TEntity> query, object value, QueryOperator filterOperator)
         where TEntity : ITrackableEntity<TStatus>
         where TStatus : Enum
