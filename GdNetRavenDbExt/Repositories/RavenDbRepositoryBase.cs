@@ -11,12 +11,12 @@ public abstract class RavenDbRepositoryBase<TAggregate, TId>(IAsyncDocumentSessi
 {
     public override async Task<long> CountAllAsync(CancellationToken cancellationToken = default)
     {
-        return await documentSession.Query<TAggregate>().LongCountAsync();
+        return await documentSession.Query<TAggregate>().LongCountAsync(cancellationToken);
     }
 
     public override async Task<TAggregate> CreateOrUpdateAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
     {
-        await documentSession.StoreAsync(aggregate);
+        await documentSession.StoreAsync(aggregate, cancellationToken);
 
         return aggregate;
     }
@@ -34,7 +34,7 @@ public abstract class RavenDbRepositoryBase<TAggregate, TId>(IAsyncDocumentSessi
     {
         // We switch to use load by ids because when a record is not found, RavenDB returns null in the dictionary
         // Otherwise the LoadAsync method throws exception InvalidCastException
-        var result = await GetByIdsAsync([id]);
+        var result = await GetByIdsAsync([id], cancellationToken);
 
         return result.FirstOrDefault()!;
     }
@@ -42,7 +42,7 @@ public abstract class RavenDbRepositoryBase<TAggregate, TId>(IAsyncDocumentSessi
     public override async Task<IList<TAggregate>> GetByIdsAsync(IEnumerable<TId> ids, CancellationToken cancellationToken = default)
     {
         var idsString = ids.Cast<string>();
-        var result = await documentSession.LoadAsync<TAggregate>(idsString);
+        var result = await documentSession.LoadAsync<TAggregate>(idsString, cancellationToken);
 
         // When a record is not found, RavenDB returns null in the dictionary
         return (result == null) ? [] : result.Values.Where(x => x != null).ToList();

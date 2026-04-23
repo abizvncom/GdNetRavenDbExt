@@ -1,7 +1,7 @@
 Create package:
 
-dotnet pack .\GdNetRavenDbExt\GdNetRavenDbExt.csproj -c Release -p:Version=1.2.260405 -p:AssemblyVersion=1.0.0
+dotnet pack .\GdNetRavenDbExt\GdNetRavenDbExt.csproj -c Release -p:Version=1.2.260407 -p:AssemblyVersion=1.0.0
 
 Push the package:
 
-dotnet nuget push .\GdNetRavenDbExt\bin\Release\GdNetRavenDbExt.1.2.260405.nupkg --api-key <API_KEY> --source https://api.nuget.org/v3/index.json
+dotnet nuget push .\GdNetRavenDbExt\bin\Release\GdNetRavenDbExt.1.2.260407.nupkg --api-key <API_KEY> --source https://api.nuget.org/v3/index.json

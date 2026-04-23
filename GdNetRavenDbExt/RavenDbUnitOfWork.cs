@@ -3,7 +3,7 @@ using Raven.Client.Documents.Session;
 
 namespace GdNetRavenDbExt;
 
-public class RavenDbAsyncUnitOfWork(IAsyncDocumentSession documentSession) : IUnitOfWork
+public class RavenDbUnitOfWork(IAsyncDocumentSession documentSession) : IUnitOfWork
 {
     public void Dispose()
     {

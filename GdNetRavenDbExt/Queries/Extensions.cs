@@ -33,7 +33,7 @@ public static class Extensions
     }
 
     public static IRavenQueryable<TEntity> FilterByStatus<TEntity, TStatus>(this IRavenQueryable<TEntity> query, object value, QueryOperator filterOperator)
-        where TEntity : ITrackableEntity<TStatus>
+        where TEntity : IHasStatus<TStatus>
         where TStatus : Enum
     {
         if (filterOperator == QueryOperator.In)
@@ -50,19 +50,19 @@ public static class Extensions
 
         if (filterOperator == QueryOperator.Equals)
         {
-            var statuses = GetStatusList();
+            var statuses = GetStatusAsList();
             return query.Where(t => t.Status.In(statuses));
         }
 
         if (filterOperator == QueryOperator.NotEquals)
         {
-            var statuses = GetStatusList();
+            var statuses = GetStatusAsList();
             return query.Where(t => !t.Status.In(statuses));
         }
 
         throw new DomainException($"Operator {filterOperator} is not supported.", default);
 
-        IEnumerable<TStatus> GetStatusList()
+        IEnumerable<TStatus> GetStatusAsList()
         {
             return [(TStatus)value];
         }
