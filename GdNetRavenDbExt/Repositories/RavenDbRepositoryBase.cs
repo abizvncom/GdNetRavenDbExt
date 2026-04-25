@@ -9,6 +9,8 @@ namespace GdNetRavenDbExt.Repositories;
 public abstract class RavenDbRepositoryBase<TAggregate, TId>(IAsyncDocumentSession documentSession) : RepositoryBase<TAggregate, TId>
     where TAggregate : IAggregate<TId>
 {
+    protected IAsyncDocumentSession AsyncDocumentSession => documentSession;
+
     public override async Task<long> CountAllAsync(CancellationToken cancellationToken = default)
     {
         return await documentSession.Query<TAggregate>().LongCountAsync(cancellationToken);
@@ -46,6 +48,23 @@ public abstract class RavenDbRepositoryBase<TAggregate, TId>(IAsyncDocumentSessi
 
         // When a record is not found, RavenDB returns null in the dictionary
         return (result == null) ? [] : result.Values.Where(x => x != null).ToList();
+    }
+
+    public override async Task<TAggregate> GetByFriendlyIdAsync(string friendlyId, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(friendlyId))
+        {
+            return default!;
+        }
+
+        if (!typeof(TAggregate).IsImplemented(typeof(IHasFriendlyId)))
+        {
+            throw new InvalidOperationException($"The aggregate type {typeof(TAggregate).Name} does not implement {typeof(IHasFriendlyId).Name}");
+        }
+
+        return await documentSession.Query<TAggregate>()
+            .Where(x => ((IHasFriendlyId)x).FriendlyId == friendlyId)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public override async Task<PaginatedResult<TAggregate>> GetListAsync(int? page, int? pageSize, CancellationToken cancellationToken = default)
