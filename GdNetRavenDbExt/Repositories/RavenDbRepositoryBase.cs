@@ -1,6 +1,6 @@
 ﻿using GdNet.Common;
-using GdNetDDD.Entities;
-using GdNetDDD.Repositories;
+using GdNetDDD.Domain.Repositories;
+using GdNetDDD.Models;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 

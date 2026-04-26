@@ -1,11 +1,11 @@
 ﻿using GdNet.Common;
-using GdNetDDD.Entities;
+using GdNetDDD.Models;
 using Raven.Client.Documents.Linq;
 using Raven.Client.Documents.Session;
 
 namespace GdNetRavenDbExt.Queries;
 
-using GdNetDDD.Queries;
+using GdNetDDD.Domain.Queries;
 
 public abstract class RavenDbEntityQueryAndSearchBase<TEntity>(IAsyncDocumentSession documentSession, string indexName)
     : IGenericEntityQuery<TEntity>, IGenericEntitySearch<TEntity> where TEntity : IEntity

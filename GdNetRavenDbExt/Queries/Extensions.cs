@@ -1,11 +1,10 @@
-﻿using GdNetDDD.Entities;
-using GdNetDDD.Errors;
-using Raven.Client.Documents;
+﻿using Raven.Client.Documents;
 using Raven.Client.Documents.Linq;
+using GdNetDDD.Domain.Queries;
+using GdNetDDD.Models;
+using GdNetDDD.Models.Errors;
 
 namespace GdNetRavenDbExt.Queries;
-
-using GdNetDDD.Queries;
 
 public static class Extensions
 {
@@ -60,7 +59,7 @@ public static class Extensions
             return query.Where(t => !t.Status.In(statuses));
         }
 
-        throw new DomainException($"Operator {filterOperator} is not supported.", default);
+        throw new DomainException($"Operator {filterOperator} is not supported.", default!);
 
         IEnumerable<TStatus> GetStatusAsList()
         {

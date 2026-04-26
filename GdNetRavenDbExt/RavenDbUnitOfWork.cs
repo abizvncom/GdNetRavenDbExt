@@ -1,4 +1,4 @@
-﻿using GdNetDDD.Common;
+﻿using GdNetDDD.Domain;
 using Raven.Client.Documents.Session;
 
 namespace GdNetRavenDbExt;
