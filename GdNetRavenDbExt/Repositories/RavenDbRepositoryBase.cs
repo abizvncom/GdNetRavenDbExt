@@ -9,7 +9,7 @@ namespace GdNetRavenDbExt.Repositories;
 public abstract class RavenDbRepositoryBase<TAggregate, TId>(IAsyncDocumentSession documentSession) : RepositoryBase<TAggregate, TId>
     where TAggregate : IAggregate<TId>
 {
-    protected IAsyncDocumentSession AsyncDocumentSession => documentSession;
+    protected IAsyncDocumentSession DocumentSession => documentSession;
 
     public override async Task<long> CountAllAsync(CancellationToken cancellationToken = default)
     {

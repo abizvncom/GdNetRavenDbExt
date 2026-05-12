@@ -8,7 +8,8 @@ namespace GdNetRavenDbExt.Queries;
 using GdNetDDD.Domain.Queries;
 
 public abstract class RavenDbEntityQueryAndSearchBase<TEntity>(IAsyncDocumentSession documentSession, string indexName)
-    : IGenericEntityQuery<TEntity>, IGenericEntitySearch<TEntity> where TEntity : IEntity
+    : IGenericEntityQuery<TEntity>, IGenericEntitySearch<TEntity>
+        where TEntity : IEntity
 {
     protected IAsyncDocumentSession DocumentSession => documentSession;
 
